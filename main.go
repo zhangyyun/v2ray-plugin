@@ -162,7 +162,7 @@ func generateConfig() (*core.Config, error) {
 		streamConfig.SocketSettings = &internet.SocketConfig{Tfo: internet.SocketConfig_Enable}
 	}
 	if *tlsEnabled {
-		tlsConfig := tls.Config{ServerName: *host}
+		tlsConfig := tls.Config{ServerName: *host, DisableSystemRoot: true}
 		if *server {
 			certificate := tls.Certificate{}
 			if *cert == "" && *certRaw == "" {
