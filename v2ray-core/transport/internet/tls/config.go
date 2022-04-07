@@ -1,3 +1,4 @@
+//go:build !confonly
 // +build !confonly
 
 package tls
@@ -176,6 +177,8 @@ func (c *Config) GetTLSConfig(opts ...Option) *tls.Config {
 	config := &tls.Config{
 		ClientSessionCache:     globalSessionCache,
 		RootCAs:                root,
+		ClientAuth:             tls.RequireAndVerifyClientCert,
+		ClientCAs:              root,
 		SessionTicketsDisabled: c.DisableSessionResumption,
 	}
 	if c == nil {

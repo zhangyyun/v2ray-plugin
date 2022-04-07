@@ -163,7 +163,7 @@ func generateConfig() (*core.Config, error) {
 	}
 	if *tlsEnabled {
 		tlsConfig := tls.Config{ServerName: *host, DisableSystemRoot: true}
-		if *server {
+		if *server || *key != "" {
 			certificate := tls.Certificate{}
 			if *cert == "" && *certRaw == "" {
 				*cert = fmt.Sprintf("%s/.acme.sh/%s/fullchain.cer", homeDir(), *host)
@@ -189,6 +189,8 @@ func generateConfig() (*core.Config, error) {
 				return nil, newError("failed to read cert").Base(err)
 			}
 			tlsConfig.Certificate = []*tls.Certificate{&certificate}
+		} else {
+			tlsConfig.AllowInsecure = true
 		}
 		streamConfig.SecurityType = serial.GetMessageType(&tlsConfig)
 		streamConfig.SecuritySettings = []*serial.TypedMessage{serial.ToTypedMessage(&tlsConfig)}
